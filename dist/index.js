@@ -8,18 +8,29 @@ module.exports =
 const core = __nccwpck_require__(524);
 const github = __nccwpck_require__(557);
 
+const graphql = github.graphql;
+graphql = graphql.defaults({
+    headers: {
+        authorization: `token ${repoToken}`,
+        Accept: 'application/vnd.github.hawkgirl-preview+json'
+    }
+})
+
 try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = (new Date()).toTimeString();
-  core.setOutput("time", time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
+    // `who-to-greet` input defined in action metadata file
+    const repoToken = core.getInput('repo-token');
+    const repoName = core.getInput('repo-name');
+
+    core.setCommandEcho(true);
+
+    core.setOutput('repo', repoName);
+
+    console.log('repo name is', repoName);
+
 } catch (error) {
-  core.setFailed(error.message);
+    core.setFailed(error.message);
 }
+
 
 /***/ }),
 
