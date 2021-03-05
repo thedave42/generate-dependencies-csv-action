@@ -1,10 +1,14 @@
 name: 'Hello World'
 description: 'Greet someone and record the time'
-inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
+inputs: 
+  repo-token:
+    description: 'The GITHUB_TOKEN secret'
+    default: ${{ github.token }}
+    required: false
+  repo-name:
+    description: 'The name of the repo to list (default is current repo)'
+    default: ${{ github.repository }}
+    required: false
 outputs:
   time: # id of output
     description: 'The time we greeted you'
