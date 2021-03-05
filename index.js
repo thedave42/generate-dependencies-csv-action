@@ -4,7 +4,7 @@ const github = require('@actions/github');
 const repoToken = core.getInput('repo-token');
 const repoName = core.getInput('repo-name');
 
-const { graphql } = require('@octokit/graphql')
+let { graphql } = require('@octokit/graphql')
 graphql = graphql.defaults({
     headers: {
         authorization: `token ${repoToken}`,

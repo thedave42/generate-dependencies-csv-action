@@ -11,7 +11,7 @@ const github = __nccwpck_require__(557);
 const repoToken = core.getInput('repo-token');
 const repoName = core.getInput('repo-name');
 
-const { graphql } = __nccwpck_require__(380)
+let { graphql } = __nccwpck_require__(380)
 graphql = graphql.defaults({
     headers: {
         authorization: `token ${repoToken}`,
