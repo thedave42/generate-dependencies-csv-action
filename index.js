@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const graphql = github.graphql;
+const { graphql } = require('@octokit/graphql')
 graphql = graphql.defaults({
     headers: {
         authorization: `token ${repoToken}`,

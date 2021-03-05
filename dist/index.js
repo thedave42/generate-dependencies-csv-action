@@ -8,7 +8,7 @@ module.exports =
 const core = __nccwpck_require__(524);
 const github = __nccwpck_require__(557);
 
-const graphql = github.graphql;
+const { graphql } = __nccwpck_require__(380)
 graphql = graphql.defaults({
     headers: {
         authorization: `token ${repoToken}`,
