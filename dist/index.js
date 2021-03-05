@@ -8,6 +8,9 @@ module.exports =
 const core = __nccwpck_require__(524);
 const github = __nccwpck_require__(557);
 
+const repoToken = core.getInput('repo-token');
+const repoName = core.getInput('repo-name');
+
 const { graphql } = __nccwpck_require__(380)
 graphql = graphql.defaults({
     headers: {
@@ -18,8 +21,6 @@ graphql = graphql.defaults({
 
 try {
     // `who-to-greet` input defined in action metadata file
-    const repoToken = core.getInput('repo-token');
-    const repoName = core.getInput('repo-name');
 
     core.setCommandEcho(true);
 

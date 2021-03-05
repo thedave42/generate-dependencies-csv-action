@@ -1,6 +1,9 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+const repoToken = core.getInput('repo-token');
+const repoName = core.getInput('repo-name');
+
 const { graphql } = require('@octokit/graphql')
 graphql = graphql.defaults({
     headers: {
@@ -11,8 +14,6 @@ graphql = graphql.defaults({
 
 try {
     // `who-to-greet` input defined in action metadata file
-    const repoToken = core.getInput('repo-token');
-    const repoName = core.getInput('repo-name');
 
     core.setCommandEcho(true);
 
