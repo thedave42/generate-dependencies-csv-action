@@ -14,11 +14,11 @@ try {
   const repoToken = core.getInput('repo-token');
   const repoName = core.getInput('repo-name');
   
-  console.log(`repoName is ${repoName}`);
-  core.setOutput("repo", repoName);
+  //console.log(`repoName is ${repoName}`);
+  core.setOutput("repo", 'Test data');
   // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
+  //const payload = JSON.stringify(github.context.payload, undefined, 2)
+  //console.log(`The event payload: ${payload}`);
 } catch (error) {
   core.setFailed(error.message);
 }
