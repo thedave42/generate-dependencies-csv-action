@@ -15,7 +15,7 @@ try {
   const repoName = core.getInput('repo-name');
   
   console.log(`repoName is ${repoName}`);
-  core.setOutput("time", `repoName is ${repoName}`);
+  core.setOutput("repo", $repoName);
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
   console.log(`The event payload: ${payload}`);
