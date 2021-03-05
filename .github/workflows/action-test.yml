@@ -5,9 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Genereate a list of dependencies for this repository
     steps:
-    - name: Generate List of Dependencies
-      id: generate-dependencies-csv-action
-      uses: thedave42/generate-dependencies-csv-action@v0.0.1
-    # Use the output from the `hello` step
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Generate dependencies action
+      uses: ./ # Uses an action in the root directory
+      id: deps    # Use the output from the `hello` step
     - name: Get the output time
-      run: echo "The time was ${{ steps.generate-dependencies-csv-action.outputs.repo }}"
+      run: echo "The time was ${{ steps.deps.outputs.repo }}"
