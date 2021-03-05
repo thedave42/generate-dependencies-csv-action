@@ -10,8 +10,8 @@ inputs:
     default: ${{ github.repository }}
     required: false
 outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  repo: # id of output
+    description: 'the name of the repo'
 runs:
   using: 'node12'
   main: 'dist/index.js'
