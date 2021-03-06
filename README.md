@@ -1,6 +1,8 @@
 # generate-dependencies-csv-action
 
-This action generates a csv file that contains a list of the depenencies detected in the specified repo.
+This action generates a csv file that contains a list of the depenencies detected in the specified repo.  The csv file will be available as a artifact from the action run.
+
+![image](https://user-images.githubusercontent.com/50186003/110189478-0c6de700-7dd4-11eb-92d7-7a4d5931fb6a.png)
 
 ## Inputs
 
