@@ -1,5 +1,8 @@
 name: 'Generaete Dependency CSV File'
 description: 'Generates a csv file that contains a list of the depenencies detected in the specified repo.'
+branding:
+  icon: 'package'
+  color: 'green'
 inputs: 
   repo-token:
     description: 'The GITHUB_TOKEN secret'
