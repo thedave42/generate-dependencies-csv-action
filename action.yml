@@ -1,4 +1,4 @@
-name: 'Generaete Dependency CSV File'
+name: 'Generate Dependency CSV File'
 description: 'Generates a csv file that contains a list of the depenencies detected in the specified repo.'
 branding:
   icon: 'package'
