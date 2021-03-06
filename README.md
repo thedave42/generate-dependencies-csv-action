@@ -1,21 +1,19 @@
-# Hello world javascript action
+# generate-dependencies-csv-action
 
-This action prints "Hello World" or "Hello" + the name of a person to greet to the log.
+This action generates a csv file that contains a list of the depenencies detected in the specified repo.
 
 ## Inputs
 
-### `who-to-greet`
+### `repo-token`
 
-**Required** The name of the person to greet. Default `"World"`.
+The GITHUB_TOKEN secret.  Will default to the GITHUB_TOKEN for the repository the workflow is run from.  Not required.
 
-## Outputs
+### `repo-name`
 
-### `time`
+The name of the repo to list dependencies from.  Will default to the repository the workflow is run from.  Not required.
 
-The time we greeted you.
 
 ## Example usage
 
-uses: actions/hello-world-javascript-action@v1.1
-with:
-  who-to-greet: 'Mona the Octocat'
+    - name: Generate dependencies action
+      uses: thedave42/generate-dependencies-csv-action@v1.0
