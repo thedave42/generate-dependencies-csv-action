@@ -9,6 +9,19 @@ const [org, repo] = repoName.split('/');
 
 const outfile = './dependency-list.csv';
 
+
+const artifact = require('@actions/artifact');
+const artifactClient = artifact.create()
+const artifactName = 'dependency-list';
+const files = [
+    'dependency-list.csv',
+]
+const rootDirectory = '.' // Also possible to use __dirname
+const options = {
+    continueOnError: false
+}
+
+
 let { graphql } = require('@octokit/graphql')
 graphql = graphql.defaults({
     headers: {
@@ -66,6 +79,7 @@ async function DumpDependencies() {
         pagination = getVulnResult.repository.vulnerabilityAlerts.pageInfo.endCursor;
       }
     } while (hasNextPage);
+    const uploadResponse = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options);
   } catch (error) {
     console.log('Request failed:', error.request);
     console.log(error.message);
