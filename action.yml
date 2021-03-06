@@ -9,13 +9,6 @@ inputs:
     description: 'The name of the repo to list (default is current repo)'
     default: ${{ github.repository }}
     required: false
-  org-name:
-    description: 'The name of the repo to list (default is current repo)'
-    default: ${{ github.organization }}
-    required: false
-outputs:
-  repo: # id of output
-    description: 'the name of the repo'
 runs:
   using: 'node12'
   main: 'dist/index.js'

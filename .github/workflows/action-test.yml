@@ -8,7 +8,4 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Generate dependencies action
-      uses: ./ # Uses an action in the root directory
-      id: deps    # Use the output from the `hello` step
-    - name: Get the output time
-      run: echo "The time was ${{ steps.deps.outputs.repo }}"
+      uses: ./ # Uses an action in the root directory   

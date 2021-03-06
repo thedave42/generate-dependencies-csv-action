@@ -7,11 +7,14 @@ module.exports =
 
 const core = __nccwpck_require__(524);
 const github = __nccwpck_require__(557);
+const fs = __nccwpck_require__(747);
 
 const repoToken = core.getInput('repo-token');
 const repoName = core.getInput('repo-name');
 
 const [org, repo] = repoName.split('/');
+
+const outfile = './dependency-list.csv';
 
 let { graphql } = __nccwpck_require__(380)
 graphql = graphql.defaults({
@@ -19,9 +22,9 @@ graphql = graphql.defaults({
         authorization: `token ${repoToken}`,
         Accept: 'application/vnd.github.hawkgirl-preview+json'
     }
-})
+});
 
-DumpDependencies()
+DumpDependencies();
 
 async function DumpDependencies() {
   let pagination = null
@@ -51,28 +54,28 @@ async function DumpDependencies() {
     }`
 
   try {
-    console.log("org,repo,ecosystem,packageName,version,hasDependencies")
-    let hasNextPage = false
+    fs.writeFileSync(outfile, "org,repo,ecosystem,packageName,version,hasDependencies\n");
+    let hasNextPage = false;
     do {
-      const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination })
+      const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
 
-      hasNextPage = getDepsResult.repository.dependencyGraphManifests.pageInfo.hasNextPage
-      const repoDependencies = getDepsResult.repository.dependencyGraphManifests.nodes
+      hasNextPage = getDepsResult.repository.dependencyGraphManifests.pageInfo.hasNextPage;
+      const repoDependencies = getDepsResult.repository.dependencyGraphManifests.nodes;
 
 
       for (const repoDependency of repoDependencies) {
         for (const dep of repoDependency.dependencies.nodes) {
-          console.log(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${dep.hasDependencies}`)
+          fs.appendFileSync(outfile, `${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${dep.hasDependencies}\n`);
         }
       }
 
       if (hasNextPage) {
-        pagination = getVulnResult.repository.vulnerabilityAlerts.pageInfo.endCursor
+        pagination = getVulnResult.repository.vulnerabilityAlerts.pageInfo.endCursor;
       }
-    } while (hasNextPage)
+    } while (hasNextPage);
   } catch (error) {
-    console.log('Request failed:', error.request)
-    console.log(error.message)
+    console.log('Request failed:', error.request);
+    console.log(error.message);
   }
 }
 
