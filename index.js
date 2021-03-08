@@ -7,14 +7,11 @@ const repoName = core.getInput('repo-name');
 
 const [org, repo] = repoName.split('/');
 
-const outfile = './dependency-list.csv';
-
-
 const artifact = require('@actions/artifact');
 const artifactClient = artifact.create()
 const artifactName = 'dependency-list';
 const files = [
-    'dependency-list.csv',
+    '*.csv',
 ]
 const rootDirectory = '.' // Also possible to use __dirname
 const options = {
@@ -60,6 +57,7 @@ async function DumpDependencies() {
     }`
 
   try {
+    const outfile = `./${org}-${repo}-dependency-list.csv`;
     fs.writeFileSync(outfile, "org,repo,ecosystem,packageName,version,hasDependencies\n");
     let hasNextPage = false;
     do {
@@ -85,18 +83,3 @@ async function DumpDependencies() {
     console.log(error.message);
   }
 }
-
-/*
-try {
-    // `who-to-greet` input defined in action metadata file
-
-    core.setCommandEcho(true);
-
-    core.setOutput('repo', repoName);
-
-    console.log('repo name is', repoName);
-
-} catch (error) {
-    core.setFailed(error.message);
-}
-*/
