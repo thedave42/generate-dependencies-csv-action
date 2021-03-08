@@ -9,4 +9,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Generate dependencies action
-      uses: ./ # Uses an action in the root directory   
+      uses: ./ # Uses an action in the root directory
+      with:
+        repo-token: ${{ secrets.DEPS_TOKEN }}
+        repo-names: generate-dependencies-csv-action,f1tv-dl,atv-tune
