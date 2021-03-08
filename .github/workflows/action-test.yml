@@ -7,8 +7,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-      with:
-        ref: scan-multiple-repos-at-once
 
     - name: Generate dependencies action
       uses: ./ # Uses an action in the root directory   
