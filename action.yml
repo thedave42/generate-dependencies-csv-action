@@ -5,13 +5,15 @@ branding:
   color: 'green'
 inputs: 
   repo-token:
-    description: 'The GITHUB_TOKEN secret'
-    default: ${{ github.token }}
+    description: 'REQUIRED: The GITHUB_TOKEN secret. Make sure this token has rights to all the repos you want to catalog.'
+    required: true
+  org-name:
+    description: 'The name of the owner/organization that contains the repositories (defaults to current repository owner)'
+    default: ${{ github.repository_owner }}
     required: false
-  repo-name:
-    description: 'The name of the repo to list (default is current repo e.g. thedave42/generate-depenencies-csv-action)'
-    default: ${{ github.repository }}
-    required: false
+  repo-names:
+    description: 'REQUIRED: A comma separated list of repository names to catalog.'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

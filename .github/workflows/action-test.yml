@@ -2,10 +2,14 @@ on: [push]
 
 jobs:
   hello_world_job:
-    runs-on: ubuntu-latest
-    name: Generate a list of dependencies for this repository
+    runs-on: ubuntu-20.04
+    name: Genereate a list of dependencies for this repository
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
     - name: Generate dependencies action
-      uses: ./ # Uses an action in the root directory   
+      uses: ./ # Uses an action in the root directory
+      with:
+        repo-token: ${{ secrets.DEPS_TOKEN }}
+        repo-names: generate-dependencies-csv-action,f1tv-dl,node-fluent-ffmpeg,node-appletv-x
