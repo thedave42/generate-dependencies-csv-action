@@ -2,6 +2,8 @@
 
 This action generates a csv file that contains a list of the depenencies detected for each of the specified repos.
 
+![image](https://user-images.githubusercontent.com/50186003/110189478-0c6de700-7dd4-11eb-92d7-7a4d5931fb6a.png)
+
 ## Inputs
 
 ### `repo-token`
