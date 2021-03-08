@@ -19,7 +19,7 @@ const artifact = __nccwpck_require__(7886);
 const artifactClient = artifact.create();
 const artifactName = `dependency-lists`;
 const files = [
-  `*-dependency-list.csv`
+  '**/.csv'
 ];
 const rootDirectory = '.'; // Also possible to use __dirname
 const options = {
