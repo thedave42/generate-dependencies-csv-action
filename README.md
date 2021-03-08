@@ -10,7 +10,7 @@ REQUIRED: The GITHUB_TOKEN secret. Make sure this token has rights to all the re
 
 ### `org-name`
 
-The name of the owner/organization that contains the repositories (defaults to current repository owner)
+The name of the owner/organization that contains the repositories (defaults to current repository owner).
 
 ### `repo-names`
 
