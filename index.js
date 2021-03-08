@@ -8,15 +8,15 @@ const repoName = core.getInput('repo-name');
 const [org, repo] = repoName.split('/');
 
 const artifact = require('@actions/artifact');
-const artifactClient = artifact.create()
+const artifactClient = artifact.create();
 const artifactName = `${org}-${repo}-dependency-lists`;
 const files = [
-    '**/*.csv',
-]
-const rootDirectory = '.' // Also possible to use __dirname
+  `${org}-${repo}-dependency-list.csv`
+];
+const rootDirectory = '.'; // Also possible to use __dirname
 const options = {
     continueOnError: false
-}
+};
 
 
 let { graphql } = require('@octokit/graphql')
@@ -30,7 +30,7 @@ graphql = graphql.defaults({
 DumpDependencies();
 
 async function DumpDependencies() {
-  let pagination = null
+  let pagination = null;
   const query =
     `query ($org: String! $repo: String! $cursor: String){
       repository(owner: $org name: $repo) {
@@ -54,7 +54,7 @@ async function DumpDependencies() {
           }
         }
       }
-    }`
+    }`;
 
   try {
     const outfile = `./${org}-${repo}-dependency-list.csv`;
