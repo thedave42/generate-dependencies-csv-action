@@ -16,7 +16,7 @@ const [org, repo] = repoName.split('/');
 
 const artifact = __nccwpck_require__(7886);
 const artifactClient = artifact.create();
-const artifactName = `${org}-${repo}-dependency-lists`;
+const artifactName = `dependency-lists`;
 const files = [
   `${org}-${repo}-dependency-list.csv`
 ];

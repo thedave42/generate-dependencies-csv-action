@@ -9,7 +9,7 @@ const [org, repo] = repoName.split('/');
 
 const artifact = require('@actions/artifact');
 const artifactClient = artifact.create();
-const artifactName = `${org}-${repo}-dependency-lists`;
+const artifactName = `dependency-lists`;
 const files = [
   `${org}-${repo}-dependency-list.csv`
 ];
