@@ -12,7 +12,7 @@ const artifact = require('@actions/artifact');
 const artifactClient = artifact.create();
 const artifactName = `dependency-lists`;
 const files = [
-  '**/*.csv'
+  '**/dependency-list.csv'
 ];
 const rootDirectory = '.'; // Also possible to use __dirname
 const options = {
