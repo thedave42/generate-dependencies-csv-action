@@ -8,7 +8,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        ref: ${{ github.event.pull_request.head.sha }}
+        ref: scan-multiple-repos-at-once
 
     - name: Generate dependencies action
       uses: ./ # Uses an action in the root directory   
