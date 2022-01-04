@@ -51,7 +51,11 @@ async function DumpDependencies() {
                 packageName
                 requirements
                 hasDependencies
-                repository
+                repository {
+                  respositoryInfo {
+                    licenseInfo
+                  }
+                }
               }
             }
           }
