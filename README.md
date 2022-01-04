@@ -22,7 +22,7 @@ REQUIRED: A comma separated list of repository names to catalog.
 ## Example usage
 
     - name: Generate dependencies action
-      uses: thedave42/generate-dependencies-csv-action@v2
+      uses: thedave42/generate-dependencies-csv-action@v3
       with:
         repo-token: ${{ secrets.YOUR_TOKEN }}
         org-name: thedave42
