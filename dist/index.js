@@ -12263,9 +12263,7 @@ async function DumpDependencies() {
                 requirements
                 hasDependencies
                 repository {
-                  respositoryInfo {
-                    licenseInfo
-                  }
+                  licenseInfo
                 }
               }
             }
