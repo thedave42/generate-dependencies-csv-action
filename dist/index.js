@@ -12279,7 +12279,7 @@ async function DumpDependencies() {
     try {
       const outfile = `./${org}-${repo}-dependency-list.csv`;
       files.push(outfile);
-      fs.writeFileSync(outfile, "org,repo,license,ecosystem,packageName,version,hasDependencies\n");
+      fs.writeFileSync(outfile, "org,repo,ecosystem,packageName,version,license id,license name,license url,hasDependencies\n");
       let hasNextPage = false;
       do {
         const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
@@ -12292,7 +12292,7 @@ async function DumpDependencies() {
         for (const repoDependency of repoDependencies) {
           for (const dep of repoDependency.dependencies.nodes) {
             console.error(dep.repository);
-            fs.appendFileSync(outfile, `${org},${repo},${dep.repository.licenseInfo.name},${dep.packageManager},${dep.packageName},${dep.requirements},${dep.hasDependencies}\n`);
+            fs.appendFileSync(outfile, `${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${dep.repository.licenseInfo.name},${dep.repository.licenseInfo.spdxId},${dep.repository.licenseInfo.url},${dep.hasDependencies}\n`);
           }
         }
 
