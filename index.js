@@ -52,7 +52,11 @@ async function DumpDependencies() {
                 requirements
                 hasDependencies
                 repository {
-                  licenseInfo
+                  licenseInfo {
+                    name
+                    spdxId
+                    url
+                  }
                 }
               }
             }
@@ -75,7 +79,7 @@ async function DumpDependencies() {
 
         for (const repoDependency of repoDependencies) {
           for (const dep of repoDependency.dependencies.nodes) {
-            fs.appendFileSync(outfile, `${org},${repo},${dep.repository.repositoryInfo.licenseInfo.name},${dep.packageManager},${dep.packageName},${dep.requirements},${dep.hasDependencies}\n`);
+            fs.appendFileSync(outfile, `${org},${repo},${dep.repository.licenseInfo.name},${dep.packageManager},${dep.packageName},${dep.requirements},${dep.hasDependencies}\n`);
           }
         }
 
