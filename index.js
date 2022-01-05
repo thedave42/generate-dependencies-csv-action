@@ -68,7 +68,7 @@ async function DumpDependencies() {
     try {
       const outfile = `./${org}-${repo}-dependency-list.csv`;
       files.push(outfile);
-      fs.writeFileSync(outfile, "org,repo,ecosystem,packageName,version,license id,license name,license url,hasDependencies\n");
+      fs.writeFileSync(outfile, "org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies\n");
       let hasNextPage = false;
       do {
         const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
