@@ -12293,7 +12293,7 @@ async function DumpDependencies() {
 				for (const repoDependency of repoDependencies) {
 					for (const dep of repoDependency.dependencies.nodes) {
 						fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
-						if (dep.hasDependencies() && dep.repository != undefined) {
+						if (dep.hasDependencies && dep.repository != undefined) {
 							const transDependencies = dep.repository.dependencyGraphManifests.nodes;
 							for (const transDep of transDependencies.dependencies.nodes) {
 								fileLines.push(`${dep.repository.owner.login},${dep.repository.name},${transDep.packageManager},${transDep.packageName},${transDep.requirements},${(transDep.repository != undefined && transDep.repository.licenseInfo != undefined) ? transDep.repository.licenseInfo.name : ''},${(transDep.repository != undefined && transDep.repository.licenseInfo != undefined) ? transDep.repository.licenseInfo.spdxId : ''},${(transDep.repository != undefined && transDep.repository.licenseInfo != undefined) ? transDep.repository.licenseInfo.url : ''},${transDep.hasDependencies}\n`);
