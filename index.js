@@ -76,13 +76,12 @@ const findDeps = async (org, repo, outfile) => {
 		hasNextPage = getDepsResult.repository.dependencyGraphManifests.pageInfo.hasNextPage;
 		const repoDependencies = getDepsResult.repository.dependencyGraphManifests.nodes;
 
-
-
 		for (const repoDependency of repoDependencies) {
 			for (const dep of repoDependency.dependencies.nodes) {
+
 				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
 				if (dep.hasDependencies && dep.repository != undefined) {
-					await findDeps(dep.repository.owner.login, dep.repository.name, outfile);
+					await findDeps(dep.repository.owner.login, dep.repository.name);
 				}
 			}
 		}
@@ -102,10 +101,10 @@ async function DumpDependencies() {
 		//Begin get depencies for one repo
 		try {
 			const outfile = `./${org}-${repo}-dependency-list.csv`;
-			console.log(`Saving dependencies for ${org}/${repo} to ${outfile}...`)
+			console.log(`Saving dependencies for ${org}/${repo} to ${outfile}...`);
 			files.push(outfile);
 			fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
-			await findDeps(org, repo, outfile);
+			await findDeps(org, repo);
 			fs.writeFileSync(outfile, fileLines.join('\n'));
 			console.log(`Saved ${outfile}`);
 			// End get dependencies for one repo
