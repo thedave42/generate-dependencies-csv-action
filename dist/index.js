@@ -12214,7 +12214,7 @@ const github = __nccwpck_require__(5791);
 const fs = __nccwpck_require__(7147);
 
 const repoToken = core.getInput('repo-token');
-const org = core.getInput('org-name');
+const org_name = core.getInput('org-name');
 const repos = core.getInput('repo-names');
 
 const repoNames = repos.split(',');
@@ -12336,11 +12336,11 @@ async function DumpDependencies() {
 	for (const repo of repoNames) {
 		//Begin get depencies for one repo
 		try {
-			const outfile = `./${org}-${repo}-dependency-list.csv`;
-			console.log(`Saving dependencies for ${org}/${repo} to ${outfile}...`);
+			const outfile = `./${org_nam}-${repo}-dependency-list.csv`;
+			console.log(`Saving dependencies for ${org_nam}/${repo} to ${outfile}...`);
 			files.push(outfile);
 			fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
-			await findDeps(org, repo);
+			await findDeps(org_name, repo);
 			fs.writeFileSync(outfile, fileLines.join('\n'));
 			console.log(`Saved ${outfile}`);
 			// End get dependencies for one repo
