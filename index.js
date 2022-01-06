@@ -82,7 +82,7 @@ const findDeps = async (org, repo, outfile) => {
 			for (const dep of repoDependency.dependencies.nodes) {
 				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
 				if (dep.hasDependencies && dep.repository != undefined) {
-					await findDeps(query, dep.repository.owner.login, dep.repository.name, outfile);
+					await findDeps(dep.repository.owner.login, dep.repository.name, outfile);
 				}
 			}
 		}
