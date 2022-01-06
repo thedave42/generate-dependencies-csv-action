@@ -12311,9 +12311,11 @@ async function DumpDependencies() {
 		try {
 			const outfile = `./${org}-${repo}-dependency-list.csv`;
 			files.push(outfile);
+			console.log(`Finding depedencies for ${org}/${repo}...`);
 			let fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
 			await findDeps(query, org, repo, pagination, outfile, fileLines);
 			fs.writeFileSync(outfile, fileLines.join('\n'));
+			console.log(`Saved ${outfile}`);
 			// End get dependencies for one repo
 		} catch (error) {
 			console.log('Request failed:', error.request);
