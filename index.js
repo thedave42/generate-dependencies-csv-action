@@ -70,13 +70,8 @@ const findDeps = async (org, repo) => {
 	do {
 		console.log(`Finding dependencies for ${org}/${repo}...`);
 		console.log(checkedRepos);
-		let checked = checkedRepos.find(check => { 
-			console.log(`find: ${check.org}/${check.name} compare to ${org}/${repo}`);
-			if(check.org == org && check.name == repo) 
-				return true ;
-		});
-		console.log(checked);
-		if (checked != undefined) { // We've already checked this repo
+
+		if (checkedRepos.find(check => check.org == org && check.name == repo) != undefined) { // We've already checked this repo
 			console.log(`Already checked ${org}/${repo}.`)
 			return;
 		}
@@ -88,21 +83,20 @@ const findDeps = async (org, repo) => {
 			"name": repo
 		});
 
-		console.log('getDepsResult');
-		console.log(getDepsResult);
+		//console.log('getDepsResult');
+		//console.log(getDepsResult);
 
 		hasNextPage = getDepsResult.repository.dependencyGraphManifests.pageInfo.hasNextPage;
 		const repoDependencies = getDepsResult.repository.dependencyGraphManifests.nodes;
 
-		console.log('hasNextPage');
-		console.log(hasNextPage);
+		//console.log('hasNextPage');
+		//console.log(hasNextPage);
 
 		for (const repoDependency of repoDependencies) {
-			console.log('repoDependency');
-			console.log(repoDependency);
+			//console.log('repoDependency');
+			//console.log(repoDependency);
 			for (const dep of repoDependency.dependencies.nodes) {
-				console.log('dep');
-				console.log(dep);
+				console.log(`Adding ${dep.packageName} for ${org}/${repo}...`);
 				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
 				if (dep.hasDependencies && dep.repository != undefined) {
 					await findDeps(dep.repository.owner.login, dep.repository.name);
@@ -127,6 +121,7 @@ async function DumpDependencies() {
 		try {
 			const outfile = `./${org_name}-${repo}-dependency-list.csv`;
 			console.log(`Saving dependencies for ${org_name}/${repo} to ${outfile}...`);
+			checkedRepos = [];
 			files.push(outfile);
 			fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
 			await findDeps(org_name, repo);
