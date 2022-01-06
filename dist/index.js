@@ -12309,11 +12309,11 @@ const findDeps = async (org, repo, outfile) => {
 DumpDependencies();
 
 async function DumpDependencies() {
-
 	for (const repo of repoNames) {
 		//Begin get depencies for one repo
 		try {
 			const outfile = `./${org}-${repo}-dependency-list.csv`;
+			console.log(`Saving dependencies for ${org}/${repo} to ${outfile}...`)
 			files.push(outfile);
 			fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
 			await findDeps(org, repo, outfile);
