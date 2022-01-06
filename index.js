@@ -70,7 +70,9 @@ const findDeps = async (org, repo) => {
 	do {
 		console.log(`Finding dependencies for ${org}/${repo}...`);
 		console.log(checkedRepos);
-		if (checkedRepos.find(repo => repo.org == org && repo.name == repo) != undefined) { // We've already checked this repo
+		let checked = checkedRepos.find(repo => repo.org == org && repo.name == repo);
+		console.log(checked);
+		if (checked != undefined) { // We've already checked this repo
 			console.log(`Already checked ${org}/${repo}.`)
 			return;
 		}
