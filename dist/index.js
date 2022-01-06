@@ -12226,7 +12226,7 @@ let files = [];
 let fileLines = [];
 let pagination = null;
 let checkedRepos = [];
-let indent = [];
+let indent = ['|-'];
 const rootDirectory = '.'; // Also possible to use __dirname
 const options = {
 	continueOnError: false
@@ -12323,7 +12323,7 @@ const findDeps = async (org, repo) => {
 				if (dep.hasDependencies && dep.repository != undefined) {
 					try {
 						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
-						indent.push('|----');
+						indent.unshift(' ');
 						await findDeps(dep.repository.owner.login, dep.repository.name);
 						indent.pop();
 					}
