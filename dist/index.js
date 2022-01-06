@@ -12225,6 +12225,7 @@ const artifactName = `dependency-lists`;
 let files = [];
 let fileLines = [];
 let pagination = null;
+let checkedRepos = [];
 const rootDirectory = '.'; // Also possible to use __dirname
 const options = {
 	continueOnError: false
@@ -12279,8 +12280,17 @@ const findDeps = async (org, repo) => {
 	let hasNextPage = false;
 	do {
 		console.log(`Finding dependencies for ${org}/${repo}...`);
+		if (checkedRepos.find(repo => repo.org == org && repo.name == repo)) { // We've already checked this repo
+			console.log(`Already checked ${org}/${repo}.`)
+			return;
+		}
 		
 		const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
+
+		checkedRepos.push({
+			"org": org,
+			"name": repo
+		});
 
 		console.log('getDepsResult');
 		console.log(getDepsResult);
