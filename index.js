@@ -40,6 +40,7 @@ const findDeps = async (query, org, repo, pagination, outfile, fileLines) => {
 			for (const dep of repoDependency.dependencies.nodes) {
 				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
 				if (dep.hasDependencies && dep.repository != undefined) {
+					console.log(JSON.stringify(dep.repository, 2,4 ));
 					findDeps(query, dep.repository.owner.login, dep.repository.name, pagination, outfile, fileLines);
 				}
 			}
