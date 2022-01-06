@@ -31,7 +31,7 @@ graphql = graphql.defaults({
 
 const findDeps = async (org, repo) => {
 	const query =
-	`query ($org: String! $repo: String! $cursor: String){
+		`query ($org: String! $repo: String! $cursor: String){
 		repository(owner: $org name: $repo) {
 			name
 			dependencyGraphManifests(first: 100 after: $cursor) {
@@ -65,18 +65,25 @@ const findDeps = async (org, repo) => {
 			}
 		}
 	}`
-	;	
+		;
 	let hasNextPage = false;
 	do {
-		console.log(`Finding dependencies for ${org}/${repo}...`);
+		console.log(`findDeps: Finding dependencies for ${org}/${repo}.`);
 		console.log(checkedRepos);
 
 		if (checkedRepos.find(check => check.org == org && check.name == repo) != undefined) { // We've already checked this repo
 			console.log(`Already checked ${org}/${repo}.`)
 			return;
 		}
-		
-		const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
+
+		try {
+			const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
+		}
+		catch (e) {
+			console.log(`GraphQL query for ${org}/${repo} failed.`);
+			console.log(e);
+			return;
+		}	
 
 		checkedRepos.push({
 			"org": org,
@@ -95,11 +102,19 @@ const findDeps = async (org, repo) => {
 		for (const repoDependency of repoDependencies) {
 			//console.log('repoDependency');
 			//console.log(repoDependency);
+			console.log(`${org}/${repo}: ${repoDependency.dependenciesCount} dependencies found in ${repoDependency.filename}.`)
 			for (const dep of repoDependency.dependencies.nodes) {
-				console.log(`Adding ${dep.packageName} for ${org}/${repo}...`);
+				console.log(`${org}/${repo}: Adding ${dep.packageName}`);
 				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
 				if (dep.hasDependencies && dep.repository != undefined) {
-					await findDeps(dep.repository.owner.login, dep.repository.name);
+					try {
+						console.log(`This repo also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
+						await findDeps(dep.repository.owner.login, dep.repository.name);
+					}
+					catch (e) {
+						console.log('Recusion request failed:', e.request);
+						console.log(e);
+					}
 				}
 			}
 		}
@@ -108,6 +123,7 @@ const findDeps = async (org, repo) => {
 			console.log('nextpage');
 			pagination = getDepsResult.repository.dependencyGraphManifests.pageInfo.endCursor;
 		}
+	
 	} while (hasNextPage);
 }
 
