@@ -12239,7 +12239,7 @@ graphql = graphql.defaults({
 	}
 });
 
-const findDeps = async (org, repo, outfile) => {
+const findDeps = async (org, repo) => {
 	const query =
 	`query ($org: String! $repo: String! $cursor: String){
 		repository(owner: $org name: $repo) {
@@ -12282,6 +12282,7 @@ const findDeps = async (org, repo, outfile) => {
 		
 		const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
 
+		console.log('getDepsResult');
 		console.log(getDepsResult);
 
 		hasNextPage = getDepsResult.repository.dependencyGraphManifests.pageInfo.hasNextPage;
