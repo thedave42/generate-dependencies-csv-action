@@ -12292,7 +12292,9 @@ async function DumpDependencies() {
 							hasDependencies
 							repository {
 								name
-								owner
+								owner {
+									login
+								}
 								licenseInfo {
 									name
 									spdxId
