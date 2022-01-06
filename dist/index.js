@@ -12357,7 +12357,7 @@ async function DumpDependencies() {
 		indent = [];
 		try {
 			const outfile = `./${org_name}-${repo}-dependency-list.csv`;
-			console.log(`${indent.join('')}${org}/${repo}: Saving dependencies to ${outfile}...`);
+			console.log(`${indent.join('')}${org_name}/${repo}: Saving dependencies to ${outfile}...`);
 			checkedRepos = [];
 			files.push(outfile);
 			fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
@@ -12366,7 +12366,7 @@ async function DumpDependencies() {
 			console.log(`Saved ${outfile}`);
 			// End get dependencies for one repo
 		} catch (error) {
-			console.log(`${indent.join('')}${org}/${repo}: Request failed:`, error.message);
+			console.log(`${indent.join('')}${org_name}/${repo}: Request failed:`, error.message);
 			//console.log(error.message);
 			//console.log(error);
 		}
