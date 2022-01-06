@@ -12,6 +12,7 @@ const artifact = require('@actions/artifact');
 const artifactClient = artifact.create();
 const artifactName = `dependency-lists`;
 let files = [];
+let fileLines = [];
 const rootDirectory = '.'; // Also possible to use __dirname
 const options = {
 	continueOnError: false
@@ -100,7 +101,7 @@ async function DumpDependencies() {
 		try {
 			const outfile = `./${org}-${repo}-dependency-list.csv`;
 			files.push(outfile);
-			const fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
+			fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
 			await findDeps(query, org, repo, outfile, fileLines);
 			fs.writeFileSync(outfile, fileLines.join('\n'));
 			console.log(`Saved ${outfile}`);
@@ -108,6 +109,7 @@ async function DumpDependencies() {
 		} catch (error) {
 			console.log('Request failed:', error.request);
 			console.log(error.message);
+			console.log(JSON.stringify(error, 2, 4));
 		}
 	}
 	const uploadResponse = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options);
