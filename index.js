@@ -103,6 +103,7 @@ async function DumpDependencies() {
 			let fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
 			await findDeps(query, org, repo, pagination, outfile, fileLines);
 			fs.writeFileSync(outfile, fileLines.join('\n'));
+			console.log(`Save ${outfile}`);
 			// End get dependencies for one repo
 		} catch (error) {
 			console.log('Request failed:', error.request);
