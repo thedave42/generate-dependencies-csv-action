@@ -12291,11 +12291,13 @@ async function DumpDependencies() {
 							requirements
 							hasDependencies
 							repository {
-							licenseInfo {
 								name
-								spdxId
-								url
-							}
+								owner
+								licenseInfo {
+									name
+									spdxId
+									url
+								}
 							}
 						}
 						}
