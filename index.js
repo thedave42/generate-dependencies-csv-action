@@ -76,8 +76,9 @@ const findDeps = async (org, repo) => {
 			return;
 		}
 
+		let getDepsResult = null;
 		try {
-			const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
+			getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
 		}
 		catch (e) {
 			console.log(`GraphQL query for ${org}/${repo} failed.`);
