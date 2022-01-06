@@ -12226,6 +12226,7 @@ let files = [];
 let fileLines = [];
 let pagination = null;
 let checkedRepos = [];
+let indent = [];
 const rootDirectory = '.'; // Also possible to use __dirname
 const options = {
 	continueOnError: false
@@ -12280,11 +12281,11 @@ const findDeps = async (org, repo) => {
 		;
 	let hasNextPage = false;
 	do {
-		console.log(`${org}/${repo}: Finding dependencies...`);
+		console.log(`${indent.join('')}${org}/${repo}: Finding dependencies...`);
 		//console.log(checkedRepos);
 
 		if (checkedRepos.find(check => check.org == org && check.name == repo) != undefined) { // We've already checked this repo
-			console.log(`${org}/${repo}: Already checked.`)
+			console.log(`${indent.join('')}${org}/${repo}: Already checked.`)
 			return;
 		}
 
@@ -12293,7 +12294,7 @@ const findDeps = async (org, repo) => {
 			getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
 		}
 		catch (e) {
-			console.log(`${org}/${repo}: GraphQL query failed: ${e.message}`);
+			console.log(`${indent.join('')}${org}/${repo}: GraphQL query failed: ${e.message}`);
 			//console.log(e);
 			return;
 		}	
@@ -12315,18 +12316,21 @@ const findDeps = async (org, repo) => {
 		for (const repoDependency of repoDependencies) {
 			//console.log('repoDependency');
 			//console.log(repoDependency);
-			console.log(`${org}/${repo}: ${repoDependency.dependenciesCount} dependencies found in ${repoDependency.filename}.`)
+			console.log(`${indent.join('')}${org}/${repo}: ${repoDependency.dependenciesCount} dependencies found in ${repoDependency.filename}.`)
 			for (const dep of repoDependency.dependencies.nodes) {
-				console.log(`${org}/${repo}: Adding ${dep.packageName}`);
+				console.log(`${indent.join('')}${org}/${repo}: Adding ${dep.packageName}`);
 				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
 				if (dep.hasDependencies && dep.repository != undefined) {
 					try {
-						console.log(`${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
+						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
+						indent.push('|----');
 						await findDeps(dep.repository.owner.login, dep.repository.name);
+						indent.pop();
 					}
 					catch (e) {
 						console.log('Recusion request failed:', e.message);
 						console.log(e);
+						indent.pop();
 					}
 				}
 			}
