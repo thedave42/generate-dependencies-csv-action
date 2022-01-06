@@ -12224,6 +12224,7 @@ const artifactClient = artifact.create();
 const artifactName = `dependency-lists`;
 let files = [];
 let fileLines = [];
+let pagination = null;
 const rootDirectory = '.'; // Also possible to use __dirname
 const options = {
 	continueOnError: false
@@ -12239,7 +12240,6 @@ graphql = graphql.defaults({
 });
 
 const findDeps = async (org, repo, outfile) => {
-	let pagination = null;
 	const query =
 	`query ($org: String! $repo: String! $cursor: String){
 		repository(owner: $org name: $repo) {
