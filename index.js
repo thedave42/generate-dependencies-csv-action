@@ -42,6 +42,7 @@ const findDeps = async (org, repo) => {
 			
 			nodes {
 				dependenciesCount
+				filename
 				dependencies {
 				nodes {
 					packageManager
@@ -68,11 +69,11 @@ const findDeps = async (org, repo) => {
 		;
 	let hasNextPage = false;
 	do {
-		console.log(`findDeps: Finding dependencies for ${org}/${repo}.`);
-		console.log(checkedRepos);
+		console.log(`${org}/${repo}: Finding dependencies...`);
+		//console.log(checkedRepos);
 
 		if (checkedRepos.find(check => check.org == org && check.name == repo) != undefined) { // We've already checked this repo
-			console.log(`Already checked ${org}/${repo}.`)
+			console.log(`${org}/${repo}: Already checked.`)
 			return;
 		}
 
@@ -81,8 +82,8 @@ const findDeps = async (org, repo) => {
 			getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
 		}
 		catch (e) {
-			console.log(`GraphQL query for ${org}/${repo} failed.`);
-			console.log(e);
+			console.log(`${org}/${repo}: GraphQL query failed: ${e.message}`);
+			//console.log(e);
 			return;
 		}	
 
@@ -109,11 +110,11 @@ const findDeps = async (org, repo) => {
 				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
 				if (dep.hasDependencies && dep.repository != undefined) {
 					try {
-						console.log(`This repo also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
+						console.log(`${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
 						await findDeps(dep.repository.owner.login, dep.repository.name);
 					}
 					catch (e) {
-						console.log('Recusion request failed:', e.request);
+						console.log('Recusion request failed:', e.message);
 						console.log(e);
 					}
 				}
@@ -137,7 +138,7 @@ async function DumpDependencies() {
 		//Begin get depencies for one repo
 		try {
 			const outfile = `./${org_name}-${repo}-dependency-list.csv`;
-			console.log(`Saving dependencies for ${org_name}/${repo} to ${outfile}...`);
+			console.log(`${org_name}/${repo}: Saving dependencies to ${outfile}...`);
 			checkedRepos = [];
 			files.push(outfile);
 			fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
@@ -146,9 +147,9 @@ async function DumpDependencies() {
 			console.log(`Saved ${outfile}`);
 			// End get dependencies for one repo
 		} catch (error) {
-			console.log('Request failed:', error.request);
+			console.log(`${org_name}/${repo}: Request failed:`, error.message);
 			//console.log(error.message);
-			console.log(error);
+			//console.log(error);
 		}
 	}
 	const uploadResponse = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options);
