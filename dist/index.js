@@ -12292,6 +12292,8 @@ const findDeps = async (org, repo) => {
 		console.log(hasNextPage);
 
 		for (const repoDependency of repoDependencies) {
+			console.log('repoDependency');
+			console.log(repoDependency);
 			for (const dep of repoDependency.dependencies.nodes) {
 				console.log('dep');
 				console.log(dep);
