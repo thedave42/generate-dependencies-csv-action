@@ -12325,12 +12325,12 @@ const findDeps = async (org, repo) => {
 						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
 						indent.unshift(' ');
 						await findDeps(dep.repository.owner.login, dep.repository.name);
-						indent.pop();
+						indent.shift();
 					}
 					catch (e) {
 						console.log('Recusion request failed:', e.message);
 						console.log(e);
-						indent.pop();
+						indent.shift();
 					}
 				}
 			}
