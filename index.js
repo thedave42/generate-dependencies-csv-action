@@ -70,9 +70,9 @@ const findDeps = async (org, repo) => {
 	do {
 		console.log(`Finding dependencies for ${org}/${repo}...`);
 		console.log(checkedRepos);
-		let checked = checkedRepos.find(repo => { 
-			console.log(`find: ${repo.org}/${repo.name} compare to ${org}/${repo}`);
-			if(repo.org == org && repo.name == repo) 
+		let checked = checkedRepos.find(check => { 
+			console.log(`find: ${check.org}/${check.name} compare to ${org}/${repo}`);
+			if(check.org == org && check.name == repo) 
 				return true ;
 		});
 		console.log(checked);
