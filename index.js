@@ -113,15 +113,15 @@ const findDeps = async (org, repo) => {
 				if (dep.hasDependencies && dep.repository != undefined) {
 					try {
 						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
-						(firstIndent) ? indent.unshift('|___ ') : indent.unshift('');
+						(firstIndent) ? indent.unshift('_') : indent.unshift('|_');
 						firstIndent = false;
 						await findDeps(dep.repository.owner.login, dep.repository.name);
-						//indent.shift();
+						indent.shift();
 					}
 					catch (e) {
 						console.log(`${indent.join('')}${org}/${repo}: Recusion request failed: ${e.message}`);
 						console.log(e);
-						//indent.shift();
+						indent.shift();
 					}
 				}
 			}
