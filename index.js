@@ -79,12 +79,10 @@ const findDeps = async (org, repo, outfile) => {
 		console.log('hasNextPage');
 		console.log(hasNextPage);
 
-		console.log('repoDependencies');
-		console.log(repoDependencies);
-
 		for (const repoDependency of repoDependencies) {
 			for (const dep of repoDependency.dependencies.nodes) {
-
+				console.log('dep');
+				console.log(dep);
 				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
 				if (dep.hasDependencies && dep.repository != undefined) {
 					await findDeps(dep.repository.owner.login, dep.repository.name);
