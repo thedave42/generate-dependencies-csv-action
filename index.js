@@ -34,7 +34,7 @@ const findDeps = async (query, org, repo, pagination, outfile, fileLines) => {
 		hasNextPage = getDepsResult.repository.dependencyGraphManifests.pageInfo.hasNextPage;
 		const repoDependencies = getDepsResult.repository.dependencyGraphManifests.nodes;
 
-
+		console.log(`Finding dependencies for ${org}/${repo}...`);
 
 		for (const repoDependency of repoDependencies) {
 			for (const dep of repoDependency.dependencies.nodes) {
@@ -100,7 +100,6 @@ async function DumpDependencies() {
 		try {
 			const outfile = `./${org}-${repo}-dependency-list.csv`;
 			files.push(outfile);
-			console.log(`Finding depedencies for ${org}/${repo}...`);
 			let fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
 			await findDeps(query, org, repo, pagination, outfile, fileLines);
 			fs.writeFileSync(outfile, fileLines.join('\n'));
