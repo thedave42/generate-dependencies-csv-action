@@ -12237,7 +12237,7 @@ graphql = graphql.defaults({
 	}
 });
 
-const findDeps = async (query, org, repo, outfile, fileLines) => {
+const findDeps = async (query, org, repo, pagination, outfile, fileLines) => {
 	let hasNextPage = false;
 	do {
 		const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
@@ -12251,7 +12251,7 @@ const findDeps = async (query, org, repo, outfile, fileLines) => {
 			for (const dep of repoDependency.dependencies.nodes) {
 				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
 				if (dep.hasDependencies && dep.repository != undefined) {
-					findDeps(query, dep.repository.owner.login, dep.repository.name, outfile, fileLines);
+					findDeps(query, dep.repository.owner.login, dep.repository.name, pagination, outfile, fileLines);
 				}
 			}
 		}
@@ -12308,7 +12308,7 @@ async function DumpDependencies() {
 			const outfile = `./${org}-${repo}-dependency-list.csv`;
 			files.push(outfile);
 			let fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
-			await findDeps(query, org, repo, outfile, fileLines);
+			await findDeps(query, org, repo, pagination, outfile, fileLines);
 			fs.writeFileSync(outfile, fileLines.join('\n'));
 			// End get dependencies for one repo
 		} catch (error) {
