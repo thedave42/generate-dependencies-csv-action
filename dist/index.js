@@ -12228,6 +12228,7 @@ let pagination = null;
 let checkedRepos = [];
 let indent = [];
 let firstIndent = false;
+let depth = 0;
 const rootDirectory = '.'; // Also possible to use __dirname
 const options = {
 	continueOnError: false
@@ -12324,14 +12325,17 @@ const findDeps = async (org, repo) => {
 				if (dep.hasDependencies && dep.repository != undefined) {
 					try {
 						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
-						(firstIndent) ? indent.unshift('_') : indent.unshift('|_');
+						(firstIndent) ? indent.unshift(`|__[${depth}]: `) : indent.shift().unshift(`|__[${depth}]: `);
+						depth++;
 						firstIndent = false;
 						await findDeps(dep.repository.owner.login, dep.repository.name);
 						indent.shift();
+						depth--;
 					}
 					catch (e) {
 						console.log(`${indent.join('')}${org}/${repo}: Recusion request failed: ${e.message}`);
 						console.log(e);
+						depth--;
 						indent.shift();
 					}
 				}
@@ -12355,6 +12359,7 @@ async function DumpDependencies() {
 		//Begin get depencies for one repo
 		firstIndent = true;
 		indent = [];
+		depth = 0;
 		try {
 			const outfile = `./${org_name}-${repo}-dependency-list.csv`;
 			console.log(`${indent.join('')}${org_name}/${repo}: Saving dependencies to ${outfile}...`);
