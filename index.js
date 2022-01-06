@@ -15,7 +15,8 @@ let files = [];
 let fileLines = [];
 let pagination = null;
 let checkedRepos = [];
-let indent = ['|-'];
+let indent = [];
+let firstIndent = false;
 const rootDirectory = '.'; // Also possible to use __dirname
 const options = {
 	continueOnError: false
@@ -86,7 +87,7 @@ const findDeps = async (org, repo) => {
 			console.log(`${indent.join('')}${org}/${repo}: GraphQL query failed: ${e.message}`);
 			//console.log(e);
 			return;
-		}	
+		}
 
 		checkedRepos.push({
 			"org": org,
@@ -112,12 +113,13 @@ const findDeps = async (org, repo) => {
 				if (dep.hasDependencies && dep.repository != undefined) {
 					try {
 						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
-						indent.unshift(' ');
+						(firstIndent) ? indent.unshift('-|-') : indent.unshift(' ');
+						firstIndent = false;
 						await findDeps(dep.repository.owner.login, dep.repository.name);
 						indent.shift();
 					}
 					catch (e) {
-						console.log('Recusion request failed:', e.message);
+						console.log(`${indent.join('')}${org}/${repo}: Recusion request failed: ${e.message}`);
 						console.log(e);
 						indent.shift();
 					}
@@ -129,7 +131,7 @@ const findDeps = async (org, repo) => {
 			console.log('nextpage');
 			pagination = getDepsResult.repository.dependencyGraphManifests.pageInfo.endCursor;
 		}
-	
+
 	} while (hasNextPage);
 }
 
@@ -140,9 +142,11 @@ DumpDependencies();
 async function DumpDependencies() {
 	for (const repo of repoNames) {
 		//Begin get depencies for one repo
+		firstIndent = true;
+		indent = [];
 		try {
 			const outfile = `./${org_name}-${repo}-dependency-list.csv`;
-			console.log(`${org_name}/${repo}: Saving dependencies to ${outfile}...`);
+			console.log(`${indent.join('')}${org}/${repo}: Saving dependencies to ${outfile}...`);
 			checkedRepos = [];
 			files.push(outfile);
 			fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
@@ -151,7 +155,7 @@ async function DumpDependencies() {
 			console.log(`Saved ${outfile}`);
 			// End get dependencies for one repo
 		} catch (error) {
-			console.log(`${org_name}/${repo}: Request failed:`, error.message);
+			console.log(`${indent.join('')}${org}/${repo}: Request failed:`, error.message);
 			//console.log(error.message);
 			//console.log(error);
 		}
