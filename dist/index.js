@@ -12237,6 +12237,33 @@ graphql = graphql.defaults({
 	}
 });
 
+const findDeps = async (query, org, repo, outfile, fileLines) => {
+	let hasNextPage = false;
+	do {
+		const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
+
+		hasNextPage = getDepsResult.repository.dependencyGraphManifests.pageInfo.hasNextPage;
+		const repoDependencies = getDepsResult.repository.dependencyGraphManifests.nodes;
+
+
+
+		for (const repoDependency of repoDependencies) {
+			for (const dep of repoDependency.dependencies.nodes) {
+				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
+				if (dep.hasDependencies && dep.repository != undefined) {
+					findDeps(query, dep.repository.owner.login, dep.repository.name, outfile, fileLines);
+				}
+			}
+		}
+
+		if (hasNextPage) {
+			pagination = getDepsResult.repository.dependencyGraphManifests.pageInfo.endCursor;
+		}
+	} while (hasNextPage);
+}
+
+
+
 DumpDependencies();
 
 async function DumpDependencies() {
@@ -12281,33 +12308,8 @@ async function DumpDependencies() {
 			const outfile = `./${org}-${repo}-dependency-list.csv`;
 			files.push(outfile);
 			let fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
-			let hasNextPage = false;
-			do {
-				const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
-
-				hasNextPage = getDepsResult.repository.dependencyGraphManifests.pageInfo.hasNextPage;
-				const repoDependencies = getDepsResult.repository.dependencyGraphManifests.nodes;
-
-
-
-				for (const repoDependency of repoDependencies) {
-					for (const dep of repoDependency.dependencies.nodes) {
-						fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
-						if (dep.hasDependencies && dep.repository != undefined) {
-							const transDependencies = dep.repository.dependencyGraphManifests.nodes;
-							for (const transDep of transDependencies.dependencies.nodes) {
-								fileLines.push(`${dep.repository.owner.login},${dep.repository.name},${transDep.packageManager},${transDep.packageName},${transDep.requirements},${(transDep.repository != undefined && transDep.repository.licenseInfo != undefined) ? transDep.repository.licenseInfo.name : ''},${(transDep.repository != undefined && transDep.repository.licenseInfo != undefined) ? transDep.repository.licenseInfo.spdxId : ''},${(transDep.repository != undefined && transDep.repository.licenseInfo != undefined) ? transDep.repository.licenseInfo.url : ''},${transDep.hasDependencies}\n`);
-							}
-						}
-					}
-				}
-
-				fs.writeFileSync(outfile, fileLines.join('\n'));
-
-				if (hasNextPage) {
-					pagination = getDepsResult.repository.dependencyGraphManifests.pageInfo.endCursor;
-				}
-			} while (hasNextPage);
+			await findDeps(query, org, repo, outfile, fileLines);
+			fs.writeFileSync(outfile, fileLines.join('\n'));
 			// End get dependencies for one repo
 		} catch (error) {
 			console.log('Request failed:', error.request);
