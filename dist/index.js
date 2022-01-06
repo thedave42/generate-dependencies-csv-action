@@ -12280,7 +12280,8 @@ const findDeps = async (org, repo) => {
 	let hasNextPage = false;
 	do {
 		console.log(`Finding dependencies for ${org}/${repo}...`);
-		if (checkedRepos.find(repo => repo.org == org && repo.name == repo)) { // We've already checked this repo
+		console.log(checkedRepos);
+		if (checkedRepos.find(repo => repo.org == org && repo.name == repo) != -1) { // We've already checked this repo
 			console.log(`Already checked ${org}/${repo}.`)
 			return;
 		}
