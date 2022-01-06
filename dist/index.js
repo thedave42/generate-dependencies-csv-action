@@ -12287,6 +12287,12 @@ const findDeps = async (org, repo, outfile) => {
 		hasNextPage = getDepsResult.repository.dependencyGraphManifests.pageInfo.hasNextPage;
 		const repoDependencies = getDepsResult.repository.dependencyGraphManifests.nodes;
 
+		console.log('hasNextPage');
+		console.log(hasNextPage);
+
+		console.log('repoDependencies');
+		console.log(repoDependencies);
+
 		for (const repoDependency of repoDependencies) {
 			for (const dep of repoDependency.dependencies.nodes) {
 
