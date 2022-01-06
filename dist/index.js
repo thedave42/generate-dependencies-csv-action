@@ -12298,6 +12298,7 @@ const findDeps = async (org, repo, outfile) => {
 		}
 
 		if (hasNextPage) {
+			console.log('nextpage');
 			pagination = getDepsResult.repository.dependencyGraphManifests.pageInfo.endCursor;
 		}
 	} while (hasNextPage);
