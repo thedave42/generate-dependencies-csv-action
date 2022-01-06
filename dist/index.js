@@ -12238,16 +12238,56 @@ graphql = graphql.defaults({
 	}
 });
 
-const findDeps = async (query, org, repo, outfile) => {
+const findDeps = async (org, repo, outfile) => {
 	let pagination = null;
+	const query =
+	`query ($org: String! $repo: String! $cursor: String){
+		repository(owner: $org name: $repo) {
+			name
+			dependencyGraphManifests(first: 100 after: $cursor) {
+			pageInfo {
+				hasNextPage
+				endCursor
+			}
+			
+			nodes {
+				dependenciesCount
+				dependencies {
+				nodes {
+					packageManager
+					packageName
+					requirements
+					hasDependencies
+					repository {
+						name
+						owner {
+							login
+						}
+						licenseInfo {
+							name
+							spdxId
+							url
+						}
+					}
+				}
+				}
+			}
+			}
+		}
+	}`
+	;	
 	let hasNextPage = false;
 	do {
+		console.log(`Finding dependencies for ${org}/${repo}...`);
+		
 		const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
+
+		console.log(getDepsResult);
 
 		hasNextPage = getDepsResult.repository.dependencyGraphManifests.pageInfo.hasNextPage;
 		const repoDependencies = getDepsResult.repository.dependencyGraphManifests.nodes;
 
-		console.log(`Finding dependencies for ${org}/${repo}...`);
+
 
 		for (const repoDependency of repoDependencies) {
 			for (const dep of repoDependency.dependencies.nodes) {
@@ -12272,48 +12312,11 @@ async function DumpDependencies() {
 
 	for (const repo of repoNames) {
 		//Begin get depencies for one repo
-		const query =
-			`query ($org: String! $repo: String! $cursor: String){
-				repository(owner: $org name: $repo) {
-					name
-					dependencyGraphManifests(first: 100 after: $cursor) {
-					pageInfo {
-						hasNextPage
-						endCursor
-					}
-					
-					nodes {
-						dependenciesCount
-						dependencies {
-						nodes {
-							packageManager
-							packageName
-							requirements
-							hasDependencies
-							repository {
-								name
-								owner {
-									login
-								}
-								licenseInfo {
-									name
-									spdxId
-									url
-								}
-							}
-						}
-						}
-					}
-					}
-				}
-    		}`
-			;
-
 		try {
 			const outfile = `./${org}-${repo}-dependency-list.csv`;
 			files.push(outfile);
 			fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
-			await findDeps(query, org, repo, outfile);
+			await findDeps(org, repo, outfile);
 			fs.writeFileSync(outfile, fileLines.join('\n'));
 			console.log(`Saved ${outfile}`);
 			// End get dependencies for one repo
