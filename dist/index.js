@@ -12336,8 +12336,8 @@ async function DumpDependencies() {
 	for (const repo of repoNames) {
 		//Begin get depencies for one repo
 		try {
-			const outfile = `./${org_nam}-${repo}-dependency-list.csv`;
-			console.log(`Saving dependencies for ${org_nam}/${repo} to ${outfile}...`);
+			const outfile = `./${org_name}-${repo}-dependency-list.csv`;
+			console.log(`Saving dependencies for ${org_name}/${repo} to ${outfile}...`);
 			files.push(outfile);
 			fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
 			await findDeps(org_name, repo);
