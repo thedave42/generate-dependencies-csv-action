@@ -12237,7 +12237,8 @@ graphql = graphql.defaults({
 	}
 });
 
-const findDeps = async (query, org, repo, pagination, outfile, fileLines) => {
+const findDeps = async (query, org, repo, outfile, fileLines) => {
+	let pagination = null;
 	let hasNextPage = false;
 	do {
 		const getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
@@ -12270,7 +12271,6 @@ async function DumpDependencies() {
 
 	for (const repo of repoNames) {
 		//Begin get depencies for one repo
-		let pagination = null;
 		const query =
 			`query ($org: String! $repo: String! $cursor: String){
 				repository(owner: $org name: $repo) {
@@ -12312,7 +12312,7 @@ async function DumpDependencies() {
 			const outfile = `./${org}-${repo}-dependency-list.csv`;
 			files.push(outfile);
 			let fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
-			await findDeps(query, org, repo, pagination, outfile, fileLines);
+			await findDeps(query, org, repo, outfile, fileLines);
 			fs.writeFileSync(outfile, fileLines.join('\n'));
 			console.log(`Saved ${outfile}`);
 			// End get dependencies for one repo
