@@ -12321,7 +12321,7 @@ const findDeps = async (org, repo) => {
 			console.log(`${indent.join('')}${org}/${repo}: ${repoDependency.dependenciesCount} dependencies found in ${repoDependency.filename}.`)
 			for (const dep of repoDependency.dependencies.nodes) {
 				console.log(`${indent.join('')}${org}/${repo} [${depth}]: Adding ${dep.packageName}`);
-				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
+				fileLines.push(`${dep.packageName},${dep.requirements},${dep.packageManager},${org},${repo},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}`);
 				if (dep.hasDependencies && dep.repository != undefined && depth < 2) {
 					try {
 						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
@@ -12373,7 +12373,7 @@ async function DumpDependencies() {
 			console.log(`${indent.join('')}${org_name}/${repo}: Saving dependencies to ${outfile}...`);
 			checkedRepos = [];
 			files.push(outfile);
-			fileLines = ["org,repo,ecosystem,packageName,version,license name,license id,license url,hasDependencies"];
+			fileLines = ["packageName,packageVersion,packageEcosystem,packageOrg,packageRepo,packageLicenseName,packageLicenseId,packgeLicenseUrl,packageHasDependencies"];
 			await findDeps(org_name, repo);
 			fs.writeFileSync(outfile, fileLines.join('\n'));
 			console.log(`${indent.join('')}${org_name}/${repo}: ${fileLines.length-2} items saved to ${outfile}`);
