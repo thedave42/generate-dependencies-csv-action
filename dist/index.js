@@ -12322,7 +12322,7 @@ const findDeps = async (org, repo) => {
 			for (const dep of repoDependency.dependencies.nodes) {
 				console.log(`${indent.join('')}${org}/${repo}: Adding ${dep.packageName}`);
 				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
-				if (dep.hasDependencies && dep.repository != undefined && (checkedRepos.find(check => check.org == dep.repository.owner.login && check.name == dep.repository.name) != undefined)) {
+				if (dep.hasDependencies && dep.repository != undefined && depth > 2) {
 					try {
 						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
 						if (firstIndent) {
