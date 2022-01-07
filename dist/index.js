@@ -12283,11 +12283,11 @@ const findDeps = async (org, repo) => {
 		;
 	let hasNextPage = false;
 	do {
-		//console.log(`${indent.join('')}${org}/${repo}: Finding dependencies...`);
+		console.log(`${indent.join('')}${org}/${repo}: Finding dependencies...`);
 		//console.log(checkedRepos);
 
 		if (checkedRepos.find(check => check.org == org && check.name == repo) != undefined) { // We've already checked this repo
-			//console.log(`${indent.join('')}${org}/${repo}: Already checked.`)
+			console.log(`${indent.join('')}${org}/${repo}: Already checked.`)
 			return;
 		}
 
@@ -12296,7 +12296,7 @@ const findDeps = async (org, repo) => {
 			getDepsResult = await graphql({ query, org: org, repo: repo, cursor: pagination });
 		}
 		catch (e) {
-			//console.log(`${indent.join('')}${org}/${repo}: GraphQL query failed: ${e.message}`);
+			console.log(`${indent.join('')}${org}/${repo}: GraphQL query failed: ${e.message}`);
 			//console.log(e);
 			return;
 		}
@@ -12318,13 +12318,13 @@ const findDeps = async (org, repo) => {
 		for (const repoDependency of repoDependencies) {
 			//console.log('repoDependency');
 			//console.log(repoDependency);
-			//console.log(`${indent.join('')}${org}/${repo}: ${repoDependency.dependenciesCount} dependencies found in ${repoDependency.filename}.`)
+			console.log(`${indent.join('')}${org}/${repo}: ${repoDependency.dependenciesCount} dependencies found in ${repoDependency.filename}.`)
 			for (const dep of repoDependency.dependencies.nodes) {
-				//console.log(`${indent.join('')}${org}/${repo}: Adding ${dep.packageName}`);
+				console.log(`${indent.join('')}${org}/${repo}: Adding ${dep.packageName}`);
 				fileLines.push(`${org},${repo},${dep.packageManager},${dep.packageName},${dep.requirements},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}\n`);
-				if (dep.hasDependencies && dep.repository != undefined) {
+				if (dep.hasDependencies && dep.repository != undefined && (checkedRepos.find(check => check.org == dep.repository.owner.login && check.name == dep.repository.name) != undefined)) {
 					try {
-						//console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
+						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
 						if (firstIndent) {
 							indent.unshift(`|__[${depth}]: `);
 						}
