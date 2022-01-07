@@ -12329,8 +12329,10 @@ const findDeps = async (org, repo) => {
 							indent.unshift(`|__[${depth}]: `);
 						}
 						else {
-							//indent.shift();
-							indent.unshift(`|__[${depth}]: `);
+							indent.shift();
+							indent.unshift(`  `);
+							indent.pop();
+							indent.push(`|__[${depth}]: `);
 						}
 						depth++;
 						firstIndent = false;
