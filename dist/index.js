@@ -12370,7 +12370,7 @@ async function DumpDependencies() {
 		indent = [];
 		depth = 0;
 		try {
-			const outfile = `./${org_name}-${repo}-dependency-list.tab`;
+			const outfile = `./${org_name}-${repo}-dependency-list.csv`;
 			console.log(`${indent.join('')}${org_name}/${repo}: Saving dependencies to ${outfile}...`);
 			checkedRepos = [];
 			files.push(outfile);
