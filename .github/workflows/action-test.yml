@@ -1,15 +1,28 @@
-on: [workflow_dispatch]
+name: Action test
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo-names:
+        description: "Comma separated list of repos to scan."
+        required: true
+        default: "f1tv-dl"
+      depth:
+        description: "The depth of transitive dependencies to report on."
+        required: true
+        default: "0"
 
 jobs:
   hello_world_job:
     runs-on: ubuntu-20.04
     name: Genereate a list of dependencies for this repository
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Generate dependencies action
-      uses: ./ # Uses an action in the root directory
-      with:
-        repo-token: ${{ secrets.DEPS_TOKEN }}
-        repo-names: generate-dependencies-csv-action,f1tv-dl,node-fluent-ffmpeg,node-appletv-x
+      - name: Generate dependencies action
+        uses: ./ # Uses an action in the root directory
+        with:
+          repo-token: ${{ secrets.DEPS_TOKEN }}
+          repo-names: ${{ github.event.inputs.repo-names }}
+          depth: ${{ github.event.inputs.depth }}
