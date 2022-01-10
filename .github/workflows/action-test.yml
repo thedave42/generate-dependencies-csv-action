@@ -3,10 +3,10 @@ name: Action test
 on:
   workflow_dispatch:
     inputs:
-      repo-name:
+      repo-names:
         description: "Comma separated list of repos to scan."
         required: true
-        default: "f1tv-dl"
+        default: "f1tv-d"
       depth:
         description: "The depth of transitive dependencies to report on."
         required: true
@@ -24,5 +24,5 @@ jobs:
         uses: ./ # Uses an action in the root directory
         with:
           repo-token: ${{ secrets.DEPS_TOKEN }}
-          repo-names: f1tv-dl
+          repo-names: ${{ github.event.inputs.repo-names }}
           depth: ${{ github.event.inputs.depth }}
