@@ -12322,7 +12322,7 @@ const findDeps = async (org, repo) => {
 			console.log(`${indent.join('')}${org}/${repo}: ${repoDependency.dependenciesCount} dependencies found in ${repoDependency.filename}.`)
 			for (const dep of repoDependency.dependencies.nodes) {
 				console.log(`${indent.join('')}${org}/${repo} [${depth}]: Adding ${dep.packageName}`);
-				fileLines.push(`${dep.packageName},${dep.requirements},${dep.packageManager},${repoDependency.filename},${org}/${repo},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}`);
+				fileLines.push(`${dep.packageName},${dep.requirements.replaceAll(',','\,')},${dep.packageManager},${repoDependency.filename},${org}/${repo},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}`);
 				if (dep.hasDependencies && dep.repository != undefined && depth < trans_depth) {
 					try {
 						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
