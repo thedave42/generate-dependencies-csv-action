@@ -15,9 +15,9 @@ inputs:
     description: 'REQUIRED: A comma separated list of repository names to catalog.'
     required: true
   depth:
-    description: 'The depth of transitive dependencies to report on.  Defaults to 0,  which will not include transitives (i.e. it will only list packages from manifests found in the repo).  Higher numbers will include transitive dependencies by including the manifests from the included packages' repos as well, but can significantly increase scan time.'
+    description: 'The depth of transitive dependencies to report on.  Defaults to 0,  which will not include transitives (i.e. it will only list packages from manifests found in the repo).  Higher numbers will include transitive dependencies by including the manifests from the included packages\' repos as well, but can significantly increase scan time.'
     required: true
-    default: '0'
+    default: 0
 
 runs:
   using: 'node12'
