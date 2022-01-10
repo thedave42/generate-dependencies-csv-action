@@ -1,5 +1,5 @@
-name: 'Generate Dependency CSV File'
-description: 'Generates a csv file that contains a list of the depenencies detected in the specified repo.'
+name: 'Generate Dependency Data File'
+description: 'Generates a tab delimined file that contains a list of the depenencies detected in the specified repo.'
 branding:
   icon: 'package'
   color: 'green'
