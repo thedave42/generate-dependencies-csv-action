@@ -6,7 +6,7 @@ on:
       depth:
         description: "The depth of transitive dependencies to report on."
         required: true
-        default: "1"
+        default: 0
 
 jobs:
   hello_world_job:
