@@ -12378,7 +12378,7 @@ async function DumpDependencies() {
 			await findDeps(org_name, repo);
 			fs.writeFileSync(outfile, fileLines.sort((a, b) => {
 				let packageA = a.split('\t')[4]; // manifest
-				let packageB = a.split('\t')[4];
+				let packageB = b.split('\t')[4];
 
 				if (packageA > packageB) {
 					return 1;
