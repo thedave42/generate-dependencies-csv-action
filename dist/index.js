@@ -12322,7 +12322,7 @@ const findDeps = async (org, repo) => {
 			console.log(`${indent.join('')}${org}/${repo}: ${repoDependency.dependenciesCount} dependencies found in ${repoDependency.filename}.`)
 			for (const dep of repoDependency.dependencies.nodes) {
 				console.log(`${indent.join('')}${org}/${repo} [${depth}]: Adding ${dep.packageName}`);
-				fileLines.push(`${dep.packageName},${dep.requirements.replaceAll(',','\,')},${dep.packageManager},${repoDependency.filename},${org}/${repo},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}`);
+				fileLines.push(`${dep.packageName}\t${dep.requirements}\t${dep.packageManager}\t${repoDependency.filename}\t${org}/${repo}\t${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''}\t${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''}\t${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''}\t${dep.hasDependencies}`);
 				if (dep.hasDependencies && dep.repository != undefined && depth < trans_depth) {
 					try {
 						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
@@ -12370,15 +12370,15 @@ async function DumpDependencies() {
 		indent = [];
 		depth = 0;
 		try {
-			const outfile = `./${org_name}-${repo}-dependency-list.csv`;
+			const outfile = `./${org_name}-${repo}-dependency-list.tab`;
 			console.log(`${indent.join('')}${org_name}/${repo}: Saving dependencies to ${outfile}...`);
 			checkedRepos = [];
 			files.push(outfile);
-			fileLines = ["packageName,packageVersion,packageEcosystem,manifestFilename,manifestOwner,packageLicenseName,packageLicenseId,packgeLicenseUrl,packageHasDependencies"];
+			fileLines = ["packageName\tpackageVersion\tpackageEcosystem\tmanifestFilename\tmanifestOwner\tpackageLicenseName\tpackageLicenseId\tpackgeLicenseUrl\tpackageHasDependencies"];
 			await findDeps(org_name, repo);
 			fs.writeFileSync(outfile, fileLines.sort((a, b) => {
-				let packageA = a.split(',')[4]; // manifestOwner
-				let packageB = a.split(',')[4];
+				let packageA = a.split('\t')[4]; // manifest
+				let packageB = a.split('\t')[4];
 
 				if (packageA > packageB) {
 					return 1;

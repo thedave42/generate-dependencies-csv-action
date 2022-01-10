@@ -1,10 +1,10 @@
 # generate-dependencies-csv-action
 
-This action generates a csv file that contains a list of the depenencies, their version, and their license info for the dependencies detected by GitHub's Dependency Graph in each of the specified repos.  The csv file or files will be attached as an artifact to the action run at its conclusion.
+This action generates a tab delimited file that contains a list of the depenencies, their version, and their license info for the dependencies detected by GitHub's Dependency Graph in each of the specified repos.  The csv file or files will be attached as an artifact to the action run at its conclusion.
 
 ![image](https://user-images.githubusercontent.com/50186003/110385625-06664900-8014-11eb-8f38-eda7789a797b.png)
 
-The Action will query the GitHub GraphQL API for the manifest information detected by Depedency Graph.  The csv file contains the following information:
+The Action will query the GitHub GraphQL API for the manifest information detected by Depedency Graph.  The file contains the following information:
 
 - packageName: The name of the package in the canonical form used by the package manager.
 - packageVersion: The dependency version requirements.
