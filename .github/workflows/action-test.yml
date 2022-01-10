@@ -3,6 +3,10 @@ name: Action test
 on:
   workflow_dispatch:
     inputs:
+      repo-name:
+        description: "Comma separated list of repos to scan."
+        required: true
+        default: "f1tv-dl"
       depth:
         description: "The depth of transitive dependencies to report on."
         required: true
