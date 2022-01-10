@@ -10,13 +10,18 @@ This action generates a csv file that contains a list of the depenencies detecte
 
 REQUIRED: The GITHUB_TOKEN secret. Make sure this token has rights to all the repos you want to catalog.
 
+### `repo-names`
+
+REQUIRED: A comma separated list of repository names to catalog.
+
 ### `org-name`
 
 The name of the owner/organization that contains the repositories (defaults to current repository owner).
 
-### `repo-names`
+### `depth`
 
-REQUIRED: A comma separated list of repository names to catalog.
+The depth of transitive dependencies to report on.  Defaults to 1,  which will not include transitives (i.e. it will only list packages directly included by applications in the repo).  Higher numbers will include transitive dependencies, but can significantly increase scan time.
+
 
 
 ## Example usage

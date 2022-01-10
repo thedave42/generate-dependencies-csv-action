@@ -14,6 +14,10 @@ inputs:
   repo-names:
     description: 'REQUIRED: A comma separated list of repository names to catalog.'
     required: true
+  depth:
+    description: 'The depth of transitive dependencies to report on.  Defaults to 1,  which will not include transitives (i.e. it will only list packages directly included by applications in the repo).  Higher numbers will include transitive dependencies, but can significantly increase scan time.'
+    required: false
+    default: 1
 runs:
   using: 'node12'
   main: 'dist/index.js'

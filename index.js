@@ -5,6 +5,7 @@ const fs = require('fs');
 const repoToken = core.getInput('repo-token');
 const org_name = core.getInput('org-name');
 const repos = core.getInput('repo-names');
+const trans_depth = parseInt(core.getInput('depth'));
 
 const repoNames = repos.split(',');
 
@@ -111,14 +112,14 @@ const findDeps = async (org, repo) => {
 			for (const dep of repoDependency.dependencies.nodes) {
 				console.log(`${indent.join('')}${org}/${repo} [${depth}]: Adding ${dep.packageName}`);
 				fileLines.push(`${dep.packageName},${dep.requirements},${dep.packageManager},${org},${repo},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.name : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.spdxId : ''},${(dep.repository != undefined && dep.repository.licenseInfo != undefined) ? dep.repository.licenseInfo.url : ''},${dep.hasDependencies}`);
-				if (dep.hasDependencies && dep.repository != undefined && depth < 2) {
+				if (dep.hasDependencies && dep.repository != undefined && depth < trans_depth) {
 					try {
 						console.log(`${indent.join('')}${org}/${repo}: ${dep.packageName} also has dependencies.  Looking up ${dep.repository.owner.login}/${dep.repository.name}...`);
 						if (firstIndent) {
 							indent.unshift(`|__[${depth}]: `);
 						}
 						else {
-							indent.shift();
+							//indent.shift();
 							indent.unshift(`  `);
 							indent.pop();
 							indent.push(`|__[${depth}]: `);
@@ -164,7 +165,20 @@ async function DumpDependencies() {
 			files.push(outfile);
 			fileLines = ["packageName,packageVersion,packageEcosystem,packageOrg,packageRepo,packageLicenseName,packageLicenseId,packgeLicenseUrl,packageHasDependencies"];
 			await findDeps(org_name, repo);
-			fs.writeFileSync(outfile, fileLines.join('\n'));
+			fs.writeFileSync(outfile, fileLines.sort((a, b) => {
+				let packageA = a.split(',')[0];
+				let packageB = a.split(',')[0];
+
+				if (packageA > packageB) {
+					return 1;
+				}
+				else if (packageA < packageB) {
+					return -1;
+				}
+				else {
+					return 0;
+				}
+			}).join('\n'));
 			console.log(`${indent.join('')}${org_name}/${repo}: ${fileLines.length-2} items saved to ${outfile}`);
 			// End get dependencies for one repo
 		} catch (error) {
