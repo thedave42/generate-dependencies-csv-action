@@ -23,6 +23,6 @@ jobs:
       - name: Generate dependencies action
         uses: ./ # Uses an action in the root directory
         with:
-          repo-token: ${{ secrets.DEPS_TOKEN }}
+          repo-token: ${{ secrets.DEPS_TOKEN_INTERNAL }}
           repo-names: ${{ github.event.inputs.repo-names }}
           depth: ${{ github.event.inputs.depth }}
