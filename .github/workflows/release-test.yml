@@ -1,0 +1,28 @@
+name: Release test
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo-names:
+        description: "Comma separated list of repos to scan."
+        required: true
+        default: "f1tv-dl"
+      depth:
+        description: "The depth of transitive dependencies to report on."
+        required: true
+        default: "0"
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-20.04
+    name: Genereate a list of dependencies for this repository
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Generate dependencies action
+        uses: thedave42/generate-dependencies-csv-action@v5
+        with:
+          repo-token: ${{ secrets.DEPS_TOKEN_INTERNAL }}
+          repo-names: ${{ github.event.inputs.repo-names }}
+          depth: ${{ github.event.inputs.depth }}
