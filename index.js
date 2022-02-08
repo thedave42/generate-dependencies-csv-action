@@ -166,7 +166,7 @@ async function DumpDependencies() {
 			fileLines = [];
 			headerRow = "packageName\tpackageVersion\tpackageEcosystem\tmanifestFilename\tmanifestOwner\tpackageLicenseName\tpackageLicenseId\tpackgeLicenseUrl\tpackageHasDependencies";
 			await findDeps(org_name, repo);
-			fs.writeFileSync(outfile, fileLines.sort((a, b) => {
+			let sorted = fileLines.sort((a, b) => {
 				let packageA = a.split('\t')[4]; // manifest
 				let packageB = b.split('\t')[4];
 
@@ -179,10 +179,9 @@ async function DumpDependencies() {
 				else {
 					return 0;
 				}
-				})
-				.unshift(headerRow)
-				.join('\n')
-			);
+				});
+
+			fs.writeFileSync(outfile, sorted.unshift(headerRow).join('\n'));
 			console.log(`${indent.join('')}${org_name}/${repo}: ${fileLines.length-2} items saved to ${outfile}`);
 			// End get dependencies for one repo
 		} catch (error) {
