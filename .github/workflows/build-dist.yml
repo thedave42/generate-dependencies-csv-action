@@ -16,10 +16,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '12'
-      
-      - name: Install ncc packager
-        run: |
-          npm i ncc -g
 
       - name: Install app dependencies
         run: |
@@ -32,5 +28,4 @@ jobs:
       - name: Add and commit Action dist
         run: |
           git add dist/*
-          git commit -m "dist from ${{ github.ref }} for sha (${{ github.sha }})"
-          
+          git commit -m "dist created from ${{ github.ref }} for sha (${{ github.sha }})"
