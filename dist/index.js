@@ -12298,7 +12298,7 @@ const findDeps = async (org, repo) => {
 		}
 		catch (e) {
 			console.log(`${indent.join('')}${org}/${repo}: GraphQL query failed: ${e.message}`);
-			console.log(e);
+			//console.log(e);
 			return;
 		}
 
