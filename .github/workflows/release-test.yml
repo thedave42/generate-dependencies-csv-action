@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Generate dependencies action
-        uses: thedave42/generate-dependencies-csv-action@header-row-fix
+        uses: thedave42/generate-dependencies-csv-action@v6
         with:
           repo-token: ${{ secrets.DEPS_TOKEN_INTERNAL }}
           repo-names: ${{ github.event.inputs.repo-names }}
