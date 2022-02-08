@@ -164,7 +164,7 @@ async function DumpDependencies() {
 			checkedRepos = [];
 			files.push(outfile);
 			fileLines = [];
-			headerRow = ["packageName\tpackageVersion\tpackageEcosystem\tmanifestFilename\tmanifestOwner\tpackageLicenseName\tpackageLicenseId\tpackgeLicenseUrl\tpackageHasDependencies"];
+			headerRow = "packageName\tpackageVersion\tpackageEcosystem\tmanifestFilename\tmanifestOwner\tpackageLicenseName\tpackageLicenseId\tpackgeLicenseUrl\tpackageHasDependencies";
 			await findDeps(org_name, repo);
 			fs.writeFileSync(outfile, fileLines.sort((a, b) => {
 				let packageA = a.split('\t')[4]; // manifest
