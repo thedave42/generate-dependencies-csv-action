@@ -12364,7 +12364,6 @@ const findDeps = async (org, repo) => {
 DumpDependencies();
 
 async function DumpDependencies() {
-	console.log(`############################################# header-row-fix ######################################################`)
 	for (const repo of repoNames) {
 		//Begin get depencies for one repo
 		firstIndent = true;
@@ -12375,10 +12374,9 @@ async function DumpDependencies() {
 			console.log(`${indent.join('')}${org_name}/${repo}: Saving dependencies to ${outfile}...`);
 			checkedRepos = [];
 			files.push(outfile);
-			fileLines = [];
-			headerRow = "packageName\tpackageVersion\tpackageEcosystem\tmanifestFilename\tmanifestOwner\tpackageLicenseName\tpackageLicenseId\tpackgeLicenseUrl\tpackageHasDependencies";
+			fileLines = ["packageName\tpackageVersion\tpackageEcosystem\tmanifestFilename\tmanifestOwner\tpackageLicenseName\tpackageLicenseId\tpackgeLicenseUrl\tpackageHasDependencies"];
 			await findDeps(org_name, repo);
-			let sorted = fileLines.sort((a, b) => {
+			fs.writeFileSync(outfile, fileLines.sort((a, b) => {
 				let packageA = a.split('\t')[4]; // manifest
 				let packageB = b.split('\t')[4];
 
@@ -12391,9 +12389,7 @@ async function DumpDependencies() {
 				else {
 					return 0;
 				}
-				});
-
-			fs.writeFileSync(outfile, [headerRow, ...sorted].join('\n'));
+			}).join('\n'));
 			console.log(`${indent.join('')}${org_name}/${repo}: ${fileLines.length-2} items saved to ${outfile}`);
 			// End get dependencies for one repo
 		} catch (error) {
