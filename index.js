@@ -153,6 +153,7 @@ const findDeps = async (org, repo) => {
 DumpDependencies();
 
 async function DumpDependencies() {
+	console.log(`############################################# header-row-fix ######################################################`)
 	for (const repo of repoNames) {
 		//Begin get depencies for one repo
 		firstIndent = true;
