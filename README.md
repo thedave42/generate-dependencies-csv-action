@@ -39,7 +39,7 @@ The depth of transitive dependencies to report on.  Defaults to 0,  which will n
 ## Example usage
 
     - name: Generate dependencies action
-      uses: thedave42/generate-dependencies-csv-action@v5
+      uses: thedave42/generate-dependencies-csv-action@v6
       with:
         repo-token: ${{ secrets.YOUR_TOKEN }}
         org-name: thedave42

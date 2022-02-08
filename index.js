@@ -74,7 +74,6 @@ const findDeps = async (org, repo) => {
 	let hasNextPage = false;
 	do {
 		console.log(`${indent.join('')}${org}/${repo}: Finding dependencies...`);
-		//console.log(checkedRepos);
 
 		if (checkedRepos.find(check => check.org == org && check.name == repo) != undefined) { // We've already checked this repo
 			console.log(`${indent.join('')}${org}/${repo}: Already checked.`)
@@ -87,7 +86,6 @@ const findDeps = async (org, repo) => {
 		}
 		catch (e) {
 			console.log(`${indent.join('')}${org}/${repo}: GraphQL query failed: ${e.message}`);
-			//console.log(e);
 			return;
 		}
 
@@ -96,18 +94,10 @@ const findDeps = async (org, repo) => {
 			"name": repo
 		});
 
-		//console.log('getDepsResult');
-		//console.log(getDepsResult);
-
 		hasNextPage = getDepsResult.repository.dependencyGraphManifests.pageInfo.hasNextPage;
 		const repoDependencies = getDepsResult.repository.dependencyGraphManifests.nodes;
 
-		//console.log('hasNextPage');
-		//console.log(hasNextPage);
-
 		for (const repoDependency of repoDependencies) {
-			//console.log('repoDependency');
-			//console.log(repoDependency);
 			console.log(`${indent.join('')}${org}/${repo}: ${repoDependency.dependenciesCount} dependencies found in ${repoDependency.filename}.`)
 			for (const dep of repoDependency.dependencies.nodes) {
 				console.log(`${indent.join('')}${org}/${repo} [${depth}]: Adding ${dep.packageName}`);
@@ -153,6 +143,7 @@ const findDeps = async (org, repo) => {
 DumpDependencies();
 
 async function DumpDependencies() {
+	console.log(`############################################# header-row-fix ######################################################`)
 	for (const repo of repoNames) {
 		//Begin get depencies for one repo
 		firstIndent = true;
@@ -164,9 +155,9 @@ async function DumpDependencies() {
 			checkedRepos = [];
 			files.push(outfile);
 			fileLines = [];
-			headerRow = ["packageName\tpackageVersion\tpackageEcosystem\tmanifestFilename\tmanifestOwner\tpackageLicenseName\tpackageLicenseId\tpackgeLicenseUrl\tpackageHasDependencies"];
+			headerRow = "packageName\tpackageVersion\tpackageEcosystem\tmanifestFilename\tmanifestOwner\tpackageLicenseName\tpackageLicenseId\tpackgeLicenseUrl\tpackageHasDependencies";
 			await findDeps(org_name, repo);
-			fs.writeFileSync(outfile, fileLines.sort((a, b) => {
+			let sorted = fileLines.sort((a, b) => {
 				let packageA = a.split('\t')[4]; // manifest
 				let packageB = b.split('\t')[4];
 
@@ -179,16 +170,13 @@ async function DumpDependencies() {
 				else {
 					return 0;
 				}
-				})
-				.unshift(headerRow)
-				.join('\n')
-			);
+				});
+
+			fs.writeFileSync(outfile, [headerRow, ...sorted].join('\n'));
 			console.log(`${indent.join('')}${org_name}/${repo}: ${fileLines.length-2} items saved to ${outfile}`);
 			// End get dependencies for one repo
 		} catch (error) {
 			console.log(`${indent.join('')}${org_name}/${repo}: Request failed:`, error.message);
-			//console.log(error.message);
-			//console.log(error);
 		}
 	}
 	const uploadResponse = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options);
