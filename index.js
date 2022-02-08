@@ -38,7 +38,7 @@ const findDeps = async (org, repo) => {
 		`query ($org: String! $repo: String! $cursor: String){
 		repository(owner: $org name: $repo) {
 			name
-			dependencyGraphManifests(first: 25 after: $cursor) {
+			dependencyGraphManifests(first: 100 after: $cursor) {
 			pageInfo {
 				hasNextPage
 				endCursor
