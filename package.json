@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "ncc build index.js --license licenses.txt"
+    "build": "./node_modules/.bin/ncc build index.js --license licenses.txt"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,9 @@
     "@actions/artifact": "^0.5.0",
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
-    "@octokit/graphql": "^4.6.0",
-    "ncc": "^0.3.6"
+    "@octokit/graphql": "^4.6.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.33.1"
   }
 }
