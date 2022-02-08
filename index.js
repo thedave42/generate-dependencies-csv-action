@@ -188,7 +188,7 @@ async function DumpDependencies() {
 		} catch (error) {
 			console.log(`${indent.join('')}${org_name}/${repo}: Request failed:`, error.message);
 			//console.log(error.message);
-			//console.log(error);
+			console.log(error);
 		}
 	}
 	const uploadResponse = await artifactClient.uploadArtifact(artifactName, files, rootDirectory, options);
