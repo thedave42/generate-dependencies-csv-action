@@ -26,6 +26,10 @@ jobs:
           npm run-script build
 
       - name: Add and commit Action dist
-        run: |
-          git add dist/*
-          git commit -m "dist created from ${{ github.ref }} for sha (${{ github.sha }})"
+        uses: EndBug/add-and-commit@v5
+        with:
+          author_name: Action workflow
+          author_email: dave@digitalnoise.net
+          message: "dist created from ${{ github.ref }} for sha (${{ github.sha }})"
+        env:
+          GITHUB_TOKEN: ${{ secrets.DIST_TOKEN }}
