@@ -1,0 +1,32 @@
+name: Create Action dist on push
+
+on:
+  push:
+
+jobs:
+  create-action-dist:
+    runs-on: ubuntu-20.04
+    name: Package Action code
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - name: Install app dependencies
+        run: |
+          npm i
+
+      - name: Creating dist from ${{ github.ref }} for sha (${{ github.sha }})
+        run: |
+          npm run-script build
+
+      - name: Add and commit Action dist
+        run: |
+          git add dist/*
+          git commit -m "dist from ${{ github.ref }} for sha (${{ github.sha }})"
+
