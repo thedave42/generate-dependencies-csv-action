@@ -181,7 +181,7 @@ async function DumpDependencies() {
 				}
 				});
 
-			fs.writeFileSync(outfile, sorted.unshift(headerRow).join('\n'));
+			fs.writeFileSync(outfile, [headerRow, ...sorted].join('\n'));
 			console.log(`${indent.join('')}${org_name}/${repo}: ${fileLines.length-2} items saved to ${outfile}`);
 			// End get dependencies for one repo
 		} catch (error) {
