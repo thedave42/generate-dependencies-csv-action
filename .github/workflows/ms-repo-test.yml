@@ -1,0 +1,33 @@
+name: Test against any org
+
+on:
+  workflow_dispatch:
+    inputs:
+      org-name:
+        description: "The Org or repo owner"
+        required: true
+        default: "microsoft"
+      repo-names:
+        description: "Comma separated list of repos to scan."
+        required: true
+        default: "vscode"
+      depth:
+        description: "The depth of transitive dependencies to report on."
+        required: true
+        default: "0"
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-20.04
+    name: Genereate a list of dependencies for this repository
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Generate dependencies action
+        uses: thedave42/generate-dependencies-csv-action@header-row-fix
+        with:
+          repo-token: ${{ secrets.DEPS_TOKEN_INTERNAL }}
+          org-name: ${{ github.event.inputs.org-name }}
+          repo-names: ${{ github.event.inputs.repo-names }}
+          depth: ${{ github.event.inputs.depth }}
