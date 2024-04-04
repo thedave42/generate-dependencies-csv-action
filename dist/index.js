@@ -40752,6 +40752,12 @@ const options = {
 	continueOnError: false
 };
 
+// Create a method that waits for a specified number of milliseconds
+const wait = (ms) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+};
 
 let { graphql } = __nccwpck_require__(8467)
 graphql = graphql.defaults({
@@ -40766,7 +40772,7 @@ const findDeps = async (org, repo) => {
 		`query ($org: String! $repo: String! $cursor: String){
 		repository(owner: $org name: $repo) {
 			name
-			dependencyGraphManifests(first: 100 after: $cursor) {
+			dependencyGraphManifests(first: 20 after: $cursor) {
 			pageInfo {
 				hasNextPage
 				endCursor
@@ -40859,6 +40865,8 @@ const findDeps = async (org, repo) => {
 		}
 
 		if (hasNextPage) {
+			// Wait for 500ms before requesting the next page
+			await wait(500)
 			console.log('nextpage');
 			pagination = getDepsResult.repository.dependencyGraphManifests.pageInfo.endCursor;
 		}
