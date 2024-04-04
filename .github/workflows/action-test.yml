@@ -3,14 +3,6 @@ name: Action test
 on:
   workflow_dispatch:
     inputs:
-      repo-names:
-        description: "Comma separated list of repos to scan."
-        required: true
-        default: "f1tv-dl"
-      org-name:
-        description: "Comma separated list of repos to scan."
-        required: true
-        default: "thedave42"
       depth:
         description: "The depth of transitive dependencies to report on."
         required: true
@@ -20,6 +12,11 @@ jobs:
   hello_world_job:
     runs-on: ubuntu-latest
     name: Genereate a list of dependencies for this repository
+    permissions:
+      contents: read
+      actions: read
+      packages: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,7 +24,7 @@ jobs:
       - name: Generate dependencies action
         uses: ./ # Uses an action in the root directory
         with:
-          repo-token: ${{ secrets.DEPS_TOKEN_INTERNAL }}
-          repo-names: ${{ github.event.inputs.repo-names }}
-          org-name: ${{ github.event.inputs.org-name }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-names: 'generate-dependencies-csv-action'
+          org-name: 'thedave42'
           depth: ${{ github.event.inputs.depth }}
