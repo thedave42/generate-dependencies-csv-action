@@ -29,7 +29,7 @@ jobs:
         run: |
           git config --global user.name 'Action workflow'
           git config --global user.email 'dave@digitalnoise.net'
-          git add dist/*
+          git add dist/index.js
           git commit -m "dist created from ${{ github.ref }} for sha (${{ github.sha }})"
           git push origin main
         env:
