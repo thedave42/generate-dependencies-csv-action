@@ -5,17 +5,17 @@ on:
 
 jobs:
   create-action-dist:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     name: Package Action code
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: '12'
 
       - name: Install app dependencies
         run: |
@@ -24,10 +24,12 @@ jobs:
       - name: Creating dist from ${{ github.ref }} for sha (${{ github.sha }})
         run: |
           npm run-script build
-      - name:
-        run: |
-          gh git add dist/
-          gh git commit -m "Build dist for ${{ github.ref }}"
-          gh git push origin main
+
+      - name: Add and commit Action dist
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          author_name: Action workflow
+          author_email: dave@digitalnoise.net
+          message: "dist created from ${{ github.ref }} for sha (${{ github.sha }})"
         env:
-          GH_TOKEN: ${{ secrets.DIST_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DIST_TOKEN }}

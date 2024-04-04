@@ -14,7 +14,7 @@ on:
 
 jobs:
   hello_world_job:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Genereate a list of dependencies for this repository
     steps:
       - name: Checkout
